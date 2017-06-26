@@ -1,9 +1,56 @@
 from utils import log
 import socket
-
+import urllib.parse
 
 class Request(object):
-    pass
+    def __init__(self):
+        self.method = 'GET'
+        self.path = ''
+        self.query = {}
+        self.body = ''
+        self.headers = {}
+
+    def form(self):
+        """
+        将 body 解析为字典
+        :return:
+        """
+        pass
+
+    def parse_raw(self, raw):
+        """
+
+        :param raw: String
+        :return:
+        """
+        self.method = raw.split()[0]
+        path = raw.split()[1]
+        self.path, self.query = self.parsed_path(path)
+        self.body = raw.split('\r\n\r\n', 1)[1]
+        self.headers = self.parsed_headers(raw)
+
+    @staticmethod
+    def parsed_path(path):
+        index = path.find('?')
+        if index == -1:
+            return path, {}
+        else:
+            path, query_string = path.split('?', 1)
+            pairs = query_string.split('&')
+            query = {}
+            for pair in pairs:
+                log('pair', pair)
+                k, v = pair.split('=')
+                query[urllib.parse.unquote(k)] = urllib.parse.unquote(v)
+            return path, query
+
+    @staticmethod
+    def parsed_headers(raw):
+        headers = {}
+        headers_string = raw.split('\r\n\r\n', 1)[0].split('\r\n')[1:]
+        for h in headers_string:
+            headers[h.split(': ')[0]] = h.split(': ')[1]
+        return headers
 
 
 def receive(connection):
@@ -29,10 +76,11 @@ def run(host='', port=5000):
             connection, address = s.accept()
             r = receive(connection)
             r = r.decode('utf-8')
-            log('raw', r)
+            # log('raw', r)
             if len(r.split()) < 2:
                 continue
-            # request.parse_raw(r)
+            request.parse_raw(r)
+            log('request', request.__dict__)
             # response = request.response()
             # connection.sendall(response)
             connection.close()
