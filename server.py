@@ -1,6 +1,7 @@
 from utils import log
 import socket
 import urllib.parse
+import json
 
 class Request(object):
     def __init__(self):
@@ -52,16 +53,22 @@ class Request(object):
             headers[h.split(': ')[0]] = h.split(': ')[1]
         return headers
 
+    def response(self):
+        header = 'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n'
+        body = json.dumps(self.__dict__, indent=2, ensure_ascii=False)
+        log(body, type(body))
+        r = header + '\r\n' + body
+        return r.encode(encoding='utf-8')
+
 
 def receive(connection):
-    buffer = []
+    buffer = b''
     while True:
         tmp = connection.recv(1024)
-        if tmp:
-            buffer.append(tmp)
-        else:
+        buffer += tmp
+        if len(tmp) < 1024:
             break
-    return b''.join(buffer)
+    return buffer
 
 
 request = Request()
@@ -81,8 +88,8 @@ def run(host='', port=5000):
                 continue
             request.parse_raw(r)
             log('request', request.__dict__)
-            # response = request.response()
-            # connection.sendall(response)
+            response = request.response()
+            connection.sendall(response)
             connection.close()
 
 
