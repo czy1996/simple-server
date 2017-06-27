@@ -1,9 +1,10 @@
 # simple-server
 一个练习用的 web server
 
-- query 和 body 使用了 urllib 解析
+- 使用 socket 库 TCP 编程
+- query 和 body 使用了 urllib 进行 urldecode
 - 多线程
-- TODO jinja template
+- jinja template
 - route
 - static
 - model (有问题)
@@ -11,5 +12,5 @@
     - ORM 
 - cookie
 - session
-- Todo app
-- restful api 
+- Todo app js
+- json api 
