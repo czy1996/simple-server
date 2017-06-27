@@ -6,5 +6,8 @@
 - TODO jinja template
 - route
 - static
+- model (有问题)
+    - 使用了文件保存
+    - ORM 
 - cookie
 - session

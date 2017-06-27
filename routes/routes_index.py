@@ -1,12 +1,16 @@
-from utils import (template,
+from utils import (template, html_response, current_user, redirect
                    )
+from models.user import User
 
 
 def route_index(request):
-    header = 'HTTP/1.1 210 VERY OK\r\nContent-Type: text/html\r\n'
-    body = template('index.html', text='shit')
-    r = header + '\r\n' + body
-    return r.encode(encoding='utf-8')
+    uid = current_user(request)
+    u = User.find_by(id=uid)
+    if u is not None:
+        username = u.username
+    else:
+        username = '游客'
+    return html_response('index.html', username=username)
 
 
 def route_static(request):
@@ -17,8 +21,14 @@ def route_static(request):
         img = header + f.read()
         return img
 
+
+def route_fav(request):
+    return redirect('/static?file=闪电侠.jpg')
+
+
 route_dict = {
     '/': route_index,
     '/static': route_static,
+    '/favicon.ico': route_fav,
 
 }
