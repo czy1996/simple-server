@@ -1,6 +1,13 @@
-from utils import log
+from utils import (log, template,
+                   )
+from routes.routes_index import route_dict as index_routes
 import urllib.parse
 import json
+
+routes_dict = {
+
+}
+routes_dict.update(index_routes)
 
 
 class Request(object):
@@ -56,11 +63,8 @@ class Request(object):
         return headers
 
     def response(self):
-        header = 'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n'
-        body = json.dumps(self.__dict__, indent=2, ensure_ascii=False)
-        # log(body, type(body))
-        r = header + '\r\n' + body
-        return r.encode(encoding='utf-8')
+        method = routes_dict[self.path]
+        return method(self)
 
 
 def receive(connection):
