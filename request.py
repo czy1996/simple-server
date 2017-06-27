@@ -2,6 +2,7 @@ from utils import (log, template,
                    )
 from routes.routes_index import route_dict as index_routes
 from routes.routes_user import route_dict as user_routes
+from routes.api_todo import route_dict as todo_api
 import urllib.parse
 import json
 
@@ -10,6 +11,7 @@ routes_dict = {
 }
 routes_dict.update(index_routes)
 routes_dict.update(user_routes)
+routes_dict.update(todo_api)
 
 
 class Request(object):
