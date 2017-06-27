@@ -33,6 +33,13 @@ class Request(object):
             f[urllib.parse.unquote(k)] = urllib.parse.unquote(v)
         return f
 
+    def json(self):
+        """
+        将 body 解析为 json
+        :return:
+        """
+        return json.loads(self.body)
+
     def parse_raw(self, raw):
         """
 

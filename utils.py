@@ -3,6 +3,7 @@ from routes.session import session
 import os.path
 import random
 import time
+import json
 
 
 # def log(*args, **kwargs):
@@ -78,3 +79,18 @@ def current_user(request):
     session_id = request.cookies.get('user', '')
     uid = session.get(session_id, -1)
     return uid
+
+
+def json_response(data):
+    """
+    json 响应
+    """
+    # 注意, content-type 现在是 application/json 而不是 text/html
+    # 这个不是很要紧, 因为客户端可以忽略这个
+    header = 'HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n'
+    # json.dumps 用于把 list 或者 dict 转化为 json 格式的字符串
+    # ensure_ascii=False 可以正确处理中文
+    # indent=2 表示格式化缩进, 方便好看用的
+    body = json.dumps(data, ensure_ascii=False, indent=2)
+    r = header + '\r\n' + body
+    return r.encode(encoding='utf-8')

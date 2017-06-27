@@ -1,4 +1,5 @@
 from models import Model
+from models.todo import Todo
 
 
 class User(Model):
@@ -45,11 +46,11 @@ class User(Model):
         else:
             return False
 
-            # def todos(self):
-            #     # 列表推倒和过滤
-            #     # return [t for t in Todo.all() if t.user_id == self.id]
-            #     ts = []
-            #     for t in Todo.all():
-            #         if t.user_id == self.id:
-            #             ts.append(t)
-            #     return ts
+    def todos(self):
+        # 列表推倒和过滤
+        # return [t for t in Todo.all() if t.user_id == self.id]
+        ts = []
+        for t in Todo.all():
+            if t.user_id == self.id:
+                ts.append(t)
+        return ts
